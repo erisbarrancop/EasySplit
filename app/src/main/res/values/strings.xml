@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Easy Split</string>
+    <string name="login_text">Login</string>
+    <string name="login_text_email">Email</string>
+    <string name="login_text_hint_name">Introduzca su nombre...</string>
+    <string name="login_text_hint_email">Introduzca su email...</string>
+    <string name="login_text_phone">Telefono</string>
+    <string name="login_text_hint_phone">Introduzca su telefono...</string>
+    <string name="login_send_button">Entrar</string>
+</resources>

@@ -1,0 +1,20 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFF8DB"/>
+            <corners android:topLeftRadius="30dp"
+                android:topRightRadius="30dp"/>
+            <stroke android:width="8dp" android:color="#85BB65"/>
+        </shape>
+    </item>
+
+    <!-- Image layer -->
+    <item>
+        <bitmap
+            android:src="@drawable/easysplit_backgroundimage"
+            android:gravity="center"
+            android:alpha="0.5"
+            />
+    </item>
+</layer-list>

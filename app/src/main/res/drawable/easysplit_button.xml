@@ -1,0 +1,27 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape with rounded corners -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="25dp"/>
+        </shape>
+    </item>
+    <!-- Button border -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="25dp"/>
+        </shape>
+    </item>
+    <!-- Radial gradient for the button background -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp"/> <!-- Slightly smaller radius for the gradient -->
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:endColor="#85BB65"
+                android:startColor="#FFF8DB"
+                android:gradientRadius="200"/>
+        </shape>
+    </item>
+</layer-list>
