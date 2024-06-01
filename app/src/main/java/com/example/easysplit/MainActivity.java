@@ -11,15 +11,20 @@ import com.example.easysplit.Modelos.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText userEditText = findViewById(R.id.name_login);
-    EditText emailEditText = findViewById(R.id.email_login);
-    EditText phoneEditText = findViewById(R.id.phone_login);
-    Button loginButton = findViewById(R.id.login_button);
+    private EditText userEditText;
+    private EditText emailEditText;
+    private EditText phoneEditText;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userEditText = findViewById(R.id.name_login);
+        emailEditText = findViewById(R.id.email_login);
+        phoneEditText = findViewById(R.id.phone_login);
+        loginButton = findViewById(R.id.login_button);
     }
 
     private void enviarUsuario(){
@@ -29,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         String telefono = phoneEditText.getText().toString();
 
         Usuario usuario = new Usuario(nombre, email, telefono);
-
-
 
     }
 
