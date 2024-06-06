@@ -1,4 +1,4 @@
-package com.example.easysplit.Interfaces;
+package com.example.easysplit.Interfaces.Usuario;
 
 import com.example.easysplit.Modelos.Usuario;
 
