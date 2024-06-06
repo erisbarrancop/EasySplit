@@ -1,9 +1,10 @@
-package com.example.easysplit;
+package com.example.easysplit.Vistas;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.easysplit.Interfaces.Usuario.UsuarioRespuesta;
-import com.example.easysplit.Interfaces.Usuario.UsuarioService;
+import com.example.easysplit.R;
+import com.example.easysplit.Servicios.Usuario.UsuarioRespuesta;
+import com.example.easysplit.Servicios.Usuario.UsuarioService;
 import com.example.easysplit.Modelos.Usuario;
 
 import retrofit2.Call;
@@ -35,12 +37,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
         userEditText = findViewById(R.id.name_login);
         emailEditText = findViewById(R.id.email_login);
         phoneEditText = findViewById(R.id.phone_login);
         loginButton = findViewById(R.id.login_button);
 
+        if (sharedPreferences.contains("UserID")) {
+            promptUsernameDialog();
+        }
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,13 +76,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UsuarioRespuesta> call, Response<UsuarioRespuesta> response) {
                 Toast.makeText(MainActivity.this, "Se ha creado el usuario correctamente", Toast.LENGTH_SHORT).show();
-                sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
                 SharedPreferences.Editor spEditor = sharedPreferences.edit();
                 spEditor.putInt("UserID", response.body().getData().getId());
                 spEditor.commit();
-
-
-
+                Intent intent = new Intent(MainActivity.this, PlanActivity.class);
+                startActivity(intent);
             }
 
 
@@ -121,12 +124,17 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<UsuarioRespuesta> call, Response<UsuarioRespuesta> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     Usuario usuario = response.body().getData();
-                    int userId = usuario.getId();
-                    SharedPreferences.Editor spEditor = sharedPreferences.edit();
-                    spEditor.putInt("UserID", userId);
-                    spEditor.commit();
-                    Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                    int userIdFromDatabase = usuario.getId();
 
+                    int userIdFromSharedPreferences = sharedPreferences.getInt("UserID",0); // -1 is the default value if key not found
+
+                    if (userIdFromDatabase == userIdFromSharedPreferences) {
+                        Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, PlanActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Nombre de usuario no coincide", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(MainActivity.this, "Nombre de usuario no encontrado", Toast.LENGTH_SHORT).show();
                 }

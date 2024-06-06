@@ -1,4 +1,4 @@
-package com.example.easysplit.Interfaces.Usuario;
+package com.example.easysplit.Servicios.Usuario;
 
 import java.util.List;
 
