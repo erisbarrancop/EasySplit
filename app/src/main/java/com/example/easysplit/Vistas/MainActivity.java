@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easysplit.R;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText phoneEditText;
     private Button loginButton;
+    private TextView iniciarSesion;
     private SharedPreferences sharedPreferences;
     private UsuarioService usuarioService;
     private String url;
@@ -42,11 +44,17 @@ public class MainActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email_login);
         phoneEditText = findViewById(R.id.phone_login);
         loginButton = findViewById(R.id.login_button);
+        iniciarSesion = findViewById(R.id.iniciarSesion);
+
+        iniciarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoginDialog();
+            }
+        });
+
         url = getResources().getString(R.string.baseUrl);
 
-        if (sharedPreferences.contains("UserID")) {
-            promptUsernameDialog();
-        }
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,8 +63,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-     void enviarUsuario(){
-
+    void enviarUsuario() {
         String nombre = userEditText.getText().toString();
         String email = emailEditText.getText().toString();
         String telefono = phoneEditText.getText().toString();
@@ -82,17 +89,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
-
             @Override
             public void onFailure(Call<UsuarioRespuesta> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "No se ha creado el usuario correctamente", Toast.LENGTH_SHORT).show();
-
             }
         });
-
-
     }
-    private void promptUsernameDialog() {
+
+    private void showLoginDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Iniciar sesión");
 
@@ -130,15 +134,13 @@ public class MainActivity extends AppCompatActivity {
                     Usuario usuario = response.body().getData();
                     int userIdFromDatabase = usuario.getId();
 
-                    int userIdFromSharedPreferences = sharedPreferences.getInt("UserID",0);
+                    SharedPreferences.Editor spEditor = sharedPreferences.edit();
+                    spEditor.putInt("UserID", userIdFromDatabase);
+                    spEditor.apply(); // Use apply() for asynchronous saving
 
-                    if (userIdFromDatabase == userIdFromSharedPreferences) {
-                        Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, PlanActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(MainActivity.this, "Nombre de usuario no coincide", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, PlanActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "Nombre de usuario no encontrado", Toast.LENGTH_SHORT).show();
                 }

@@ -10,4 +10,6 @@
     <string name="login_send_button">Entrar</string>
     <string name="baseUrl">http://erisbarrancop.eu.pythonanywhere.com/</string>
     <string name="plans_head_text">Planes</string>
+    <string name="login_text_SignIn">Si ya tienes una cuenta, </string>
+    <string name="login_text_SignInClick">Inicia Sesión</string>
 </resources>
