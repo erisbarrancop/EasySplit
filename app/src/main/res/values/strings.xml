@@ -9,4 +9,5 @@
     <string name="login_text_hint_phone">Introduzca su telefono…</string>
     <string name="login_send_button">Entrar</string>
     <string name="baseUrl">http://erisbarrancop.eu.pythonanywhere.com/</string>
+    <string name="plans_head_text">Planes</string>
 </resources>

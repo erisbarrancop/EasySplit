@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Vistas.PlanActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/easysplit_layoutborder">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:textStyle="bold"
+            android:text="@string/plans_head_text"
+            android:textSize="16dp"
+            android:background="@drawable/easysplit_gradientbackgroundbordered"
+            android:gravity="center"
+            />
+        <LinearLayout
+            android:layout_margin="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+           <ListView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:background="#C9FFF8DB"
+               android:id="@+id/listViewPlanes">
+
+           </ListView>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
