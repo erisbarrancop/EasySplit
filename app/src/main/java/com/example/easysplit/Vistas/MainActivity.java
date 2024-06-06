@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private SharedPreferences sharedPreferences;
     private UsuarioService usuarioService;
-
+    private String url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email_login);
         phoneEditText = findViewById(R.id.phone_login);
         loginButton = findViewById(R.id.login_button);
+        url = getResources().getString(R.string.baseUrl);
 
         if (sharedPreferences.contains("UserID")) {
             promptUsernameDialog();
@@ -61,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         String telefono = phoneEditText.getText().toString();
 
         Usuario usuario = new Usuario(nombre, email, telefono);
-
-        String url = getResources().getString(R.string.baseUrl);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -118,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkUsername(String username) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        usuarioService = retrofit.create(UsuarioService.class);
         Call<UsuarioRespuesta> llamada = usuarioService.obtenerUsuarioPorUsername(username);
         llamada.enqueue(new Callback<UsuarioRespuesta>() {
             @Override
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     Usuario usuario = response.body().getData();
                     int userIdFromDatabase = usuario.getId();
 
-                    int userIdFromSharedPreferences = sharedPreferences.getInt("UserID",0); // -1 is the default value if key not found
+                    int userIdFromSharedPreferences = sharedPreferences.getInt("UserID",0);
 
                     if (userIdFromDatabase == userIdFromSharedPreferences) {
                         Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
