@@ -1,0 +1,8 @@
+<!-- drawable/dialog_border.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#E2FFFACF" />
+    <stroke
+        android:width="15dp"
+        android:color="#FF85BB65" /> <!-- Color lila (puedes cambiar el valor #FF00FF por el color lila que desees) -->
+    <corners android:radius="25dp" /> <!-- Bordes redondeados de 10dp (puedes ajustar el valor según tus preferencias) -->
+</shape>

@@ -3,13 +3,18 @@ package com.example.easysplit.Vistas;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,27 +102,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLoginDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Iniciar sesión");
+        Dialog dialog = new Dialog(MainActivity.this);
+        View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.iniciarsesion_form, null);
 
-        final EditText input = new EditText(this);
-        builder.setView(input);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        builder.setPositiveButton("Iniciar sesión", new DialogInterface.OnClickListener() {
+        dialog.setContentView(dialogView);
+
+        EditText username = dialog.findViewById(R.id.username_login);
+        ImageView sendButton = dialog.findViewById(R.id.form_send_button);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String username = input.getText().toString();
-                checkUsername(username);
+            public void onClick(View v) {
+                String nombre = username.getText().toString();
+                checkUsername(nombre);
             }
         });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+        dialog.show();
     }
 
     private void checkUsername(String username) {
