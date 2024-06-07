@@ -89,9 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Se ha creado el usuario correctamente", Toast.LENGTH_SHORT).show();
                 SharedPreferences.Editor spEditor = sharedPreferences.edit();
                 spEditor.putInt("UserID", response.body().getData().getId());
-                spEditor.commit();
+                spEditor.apply();
                 Intent intent = new Intent(MainActivity.this, PlanActivity.class);
                 startActivity(intent);
+                spEditor.commit();
             }
 
             @Override

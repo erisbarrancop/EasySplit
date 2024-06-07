@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="#000" />
+        android:textColor="#1B6816" />
 
     <TextView
         android:id="@+id/plan_moneda"
