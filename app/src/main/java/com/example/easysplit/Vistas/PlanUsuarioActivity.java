@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -11,9 +13,7 @@ import com.example.easysplit.Adapters.PlanAdapter;
 import com.example.easysplit.Modelos.Plan;
 import com.example.easysplit.R;
 import com.example.easysplit.Servicios.Plan.PlanRespuesta;
-import com.example.easysplit.Servicios.Plan.PlanService;
 import com.example.easysplit.Servicios.Plan.PlanUsuarioService;
-import com.example.easysplit.Servicios.Usuario.UsuarioRespuesta;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PlanActivity extends AppCompatActivity {
+public class PlanUsuarioActivity extends AppCompatActivity {
 
     private ListView listViewPlanes;
     private PlanAdapter planAdapter;
@@ -52,6 +52,13 @@ public class PlanActivity extends AppCompatActivity {
 
         // Realizar la petición para obtener los planes del usuario
         obtenerPlanes(userId);
+
+        listViewPlanes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
 
     private void obtenerPlanes(int userId) {
@@ -62,16 +69,16 @@ public class PlanActivity extends AppCompatActivity {
             public void onResponse(Call<PlanRespuesta> call, Response<PlanRespuesta> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Plan> planes = response.body().getData();
-                    planAdapter = new PlanAdapter(PlanActivity.this, planes);
+                    planAdapter = new PlanAdapter(PlanUsuarioActivity.this, planes);
                     listViewPlanes.setAdapter(planAdapter);
                 } else {
-                    Toast.makeText(PlanActivity.this, "No se encontraron planes", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlanUsuarioActivity.this, "No se encontraron planes", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<PlanRespuesta> call, Throwable t) {
-                Toast.makeText(PlanActivity.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlanUsuarioActivity.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
             }
         });
     }

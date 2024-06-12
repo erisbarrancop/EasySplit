@@ -8,5 +8,5 @@ import retrofit2.http.Path;
 
 public interface PlanService {
     @GET("usuariosplanes/{id_usuario}")
-    Call<UsuarioRespuesta> obtenerPlanesPorUsuario(@Path("id_usuario") int idUsuario);
+    Call<PlanRespuesta> obtenerPlanesPorUsuario(@Path("id_usuario") int idUsuario);
 }

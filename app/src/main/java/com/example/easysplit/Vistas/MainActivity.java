@@ -1,10 +1,8 @@
 package com.example.easysplit.Vistas;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor spEditor = sharedPreferences.edit();
                 spEditor.putInt("UserID", response.body().getData().getId());
                 spEditor.apply();
-                Intent intent = new Intent(MainActivity.this, PlanActivity.class);
+                Intent intent = new Intent(MainActivity.this, PlanUsuarioActivity.class);
                 startActivity(intent);
                 spEditor.commit();
             }
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     spEditor.apply(); // Use apply() for asynchronous saving
 
                     Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, PlanActivity.class);
+                    Intent intent = new Intent(MainActivity.this, PlanUsuarioActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "Nombre de usuario no encontrado", Toast.LENGTH_SHORT).show();
