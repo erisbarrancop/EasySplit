@@ -2,6 +2,7 @@ package com.example.easysplit.Vistas;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -56,6 +57,18 @@ public class PlanUsuarioActivity extends AppCompatActivity {
         listViewPlanes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                Plan selectedPlan = (Plan) parent.getItemAtPosition(position);
+                int planId = selectedPlan.getId();
+                String planName = selectedPlan.getNombre();
+                Intent intent = new Intent(PlanUsuarioActivity.this, GastoActivity.class);
+                intent.putExtra("selectedPlan", planId);
+                intent.putExtra("planName", planName);
+
+                startActivity(intent);
+
+
 
             }
         });
