@@ -1,12 +1,13 @@
 package com.example.easysplit.Servicios.Plan;
 
-import com.example.easysplit.Servicios.Usuario.UsuarioRespuesta;
+import com.example.easysplit.Modelos.Plan;
+import com.example.easysplit.Servicios.Plan.PlanRespuesta;
 
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
 
 public interface PlanService {
-    @GET("usuariosplanes/{id_usuario}")
-    Call<PlanRespuesta> obtenerPlanesPorUsuario(@Path("id_usuario") int idUsuario);
+    @POST("/planes")
+    Call<PlanRespuesta> crearPlan(@Body Plan plan);
 }

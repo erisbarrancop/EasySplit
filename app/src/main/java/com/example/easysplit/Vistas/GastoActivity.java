@@ -53,7 +53,6 @@ public class GastoActivity extends AppCompatActivity {
                 .build();
         gastoService = retrofit.create(GastoService.class);
 
-        // Fetch the gastos for the selected plan
         obtenerGastos(planId);
     }
 

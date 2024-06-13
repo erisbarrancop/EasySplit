@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="40dp"
+    android:background="@drawable/dialog_border">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="Crear Plan"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#1B6816"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/plan_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Nombre del Plan"
+        android:background="@drawable/easysplit_edittext"
+        android:padding="8dp"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:id="@+id/plan_currency"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Moneda del Plan"
+        android:background="@drawable/easysplit_edittext"
+        android:padding="8dp"
+        android:layout_marginTop="20dp"/>
+    <Spinner
+        android:id="@+id/user_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/create_plan_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/send_button_form"
+            android:textColor="#FFFFFF"
+            />
+    </LinearLayout>
+
+</LinearLayout>

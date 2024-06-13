@@ -9,9 +9,9 @@ public class Gasto {
     private float importe;
     private int id_plan;
     private int id_pagador;
-    private Date fecha;
+    private String fecha;
 
-    public Gasto(String concepto, float importe, int id_plan, int id_pagador, Date fecha) {
+    public Gasto(String concepto, float importe, int id_plan, int id_pagador, String fecha) {
         this.concepto = concepto;
         this.importe = importe;
         this.id_plan = id_plan;
@@ -59,11 +59,11 @@ public class Gasto {
         this.id_pagador = id_pagador;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 }

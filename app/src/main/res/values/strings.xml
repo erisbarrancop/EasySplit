@@ -15,4 +15,5 @@
     <string name="form_username">Iniciar Sesion\n</string>
     <string name="login_form_username">Nombre de usuario…</string>
     <string name="login_button_text">Iniciar Sesion\n</string>
+    <string name="submit">Añadir Plan\n</string>
 </resources>

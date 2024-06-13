@@ -2,21 +2,23 @@ package com.example.easysplit.Servicios.Plan;
 
 import com.example.easysplit.Modelos.Plan;
 
-import java.util.List;
-
 public class PlanRespuesta {
+    private Plan data;
+    private String message;
 
-    private List<Plan> data;
-
-    public PlanRespuesta(List<Plan> data) {
-        this.data = data;
-    }
-
-    public List<Plan> getData() {
+    public Plan getData() {
         return data;
     }
 
-    public void setData(List<Plan> data) {
+    public void setData(Plan data) {
         this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
