@@ -15,18 +15,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.easysplit.Adapters.PlanAdapter;
+import com.example.easysplit.Adapters.UserCheckboxSpinnerAdapter;
 import com.example.easysplit.Modelos.Plan;
+import com.example.easysplit.Modelos.Usuario;
 import com.example.easysplit.R;
 import com.example.easysplit.Servicios.Plan.PlanRespuesta;
 import com.example.easysplit.Servicios.Plan.PlanService;
 import com.example.easysplit.Servicios.Plan.PlanUsuarioRespuesta;
 import com.example.easysplit.Servicios.Plan.PlanUsuarioService;
+import com.example.easysplit.Servicios.Usuario.UsuarioRespuestaLista;
 import com.example.easysplit.Servicios.Usuario.UsuarioService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -73,14 +78,13 @@ public class PlanUsuarioActivity extends AppCompatActivity {
         fabAddPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLoginDialog();
+                showCreatePlanDialog();
             }
         });
 
         listViewPlanes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 
                 Plan selectedPlan = (Plan) parent.getItemAtPosition(position);
                 int planId = selectedPlan.getId();
@@ -90,9 +94,6 @@ public class PlanUsuarioActivity extends AppCompatActivity {
                 intent.putExtra("planName", planName);
 
                 startActivity(intent);
-
-
-
             }
         });
     }
@@ -118,7 +119,8 @@ public class PlanUsuarioActivity extends AppCompatActivity {
             }
         });
     }
-    private void showLoginDialog() {
+
+    private void showCreatePlanDialog() {
         Dialog dialog = new Dialog(PlanUsuarioActivity.this);
         View dialogView = LayoutInflater.from(PlanUsuarioActivity.this).inflate(R.layout.crearplan_form, null);
 
@@ -127,9 +129,42 @@ public class PlanUsuarioActivity extends AppCompatActivity {
         dialog.setContentView(dialogView);
         EditText planNameEditText = dialogView.findViewById(R.id.plan_name);
         EditText planCurrencyEditText = dialogView.findViewById(R.id.plan_currency);
-        Button sendButton = dialog.findViewById(R.id.create_plan_button);
+        Spinner userSpinner = dialogView.findViewById(R.id.user_spinner);
+        Button createPlanButton = dialogView.findViewById(R.id.create_plan_button);
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        // Lista para usuarios seleccionados
+        List<Usuario> selectedUsuarios = new ArrayList<>();
+
+        // Obtener la lista de usuarios de la base de datos
+        usuarioService.obtenerListaUsuarios().enqueue(new Callback<UsuarioRespuestaLista>() {
+            @Override
+            public void onResponse(Call<UsuarioRespuestaLista> call, Response<UsuarioRespuestaLista> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Usuario> usuarios = response.body().getUsuarios();
+
+                    // Filtrar usuarios para excluir al administrador actual
+                    List<Usuario> filteredUsuarios = new ArrayList<>();
+                    for (Usuario usuario : usuarios) {
+                        int id_admin = sharedPreferences.getInt("UserID", 0);
+                        if (usuario.getId() != id_admin) {
+                            filteredUsuarios.add(usuario);
+                        }
+                    }
+
+                    UserCheckboxSpinnerAdapter adapter = new UserCheckboxSpinnerAdapter(PlanUsuarioActivity.this, filteredUsuarios, selectedUsuarios);
+                    userSpinner.setAdapter(adapter);
+                } else {
+                    Toast.makeText(PlanUsuarioActivity.this, "No se pudieron obtener los usuarios", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioRespuestaLista> call, Throwable t) {
+                Toast.makeText(PlanUsuarioActivity.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String nombre = planNameEditText.getText().toString();
@@ -144,6 +179,8 @@ public class PlanUsuarioActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<PlanRespuesta> call, Response<PlanRespuesta> response) {
                         if (response.isSuccessful() && response.body() != null) {
+                            int planId = response.body().getData().getId();
+                            unirUsuariosAlPlan(planId, selectedUsuarios);
                             Toast.makeText(PlanUsuarioActivity.this, "Plan creado exitosamente", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                             obtenerPlanes(id_admin);
@@ -159,22 +196,27 @@ public class PlanUsuarioActivity extends AppCompatActivity {
                 });
             }
         });
+
         dialog.show();
     }
-    private void crearRelacionUsuarioPlan(int planId, int userId) {
-        Call<Void> call = planUsuarioService.crearRelacionUsuarioPlan(planId, userId);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(PlanUsuarioActivity.this, "No se pudo crear la relación usuario-plan", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(PlanUsuarioActivity.this, "Error en la conexión al crear la relación usuario-plan", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+    private void unirUsuariosAlPlan(int planId, List<Usuario> usuarios) {
+        for (Usuario usuario : usuarios) {
+            Call<Void> llamada = planUsuarioService.crearRelacionUsuarioPlan(planId, usuario.getId());
+            llamada.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(PlanUsuarioActivity.this, "No se pudo unir el usuario " + usuario.getNombre() + " al plan", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(PlanUsuarioActivity.this, "Error en la conexión", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

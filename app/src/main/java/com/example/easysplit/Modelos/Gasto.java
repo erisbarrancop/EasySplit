@@ -11,12 +11,11 @@ public class Gasto {
     private int id_pagador;
     private String fecha;
 
-    public Gasto(String concepto, float importe, int id_plan, int id_pagador, String fecha) {
+    public Gasto(String concepto, float importe, int id_pagador) {
         this.concepto = concepto;
         this.importe = importe;
-        this.id_plan = id_plan;
         this.id_pagador = id_pagador;
-        this.fecha = fecha;
+
     }
 
     public int getId() {

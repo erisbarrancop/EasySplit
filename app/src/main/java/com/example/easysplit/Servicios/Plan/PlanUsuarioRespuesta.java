@@ -1,6 +1,7 @@
 package com.example.easysplit.Servicios.Plan;
 
 import com.example.easysplit.Modelos.Plan;
+import com.example.easysplit.Modelos.Usuario;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class PlanUsuarioRespuesta {
     public PlanUsuarioRespuesta(List<Plan> data) {
         this.data = data;
     }
+
 
     public List<Plan> getData() {
         return data;
