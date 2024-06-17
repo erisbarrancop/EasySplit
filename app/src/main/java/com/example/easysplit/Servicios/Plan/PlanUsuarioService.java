@@ -1,6 +1,7 @@
 package com.example.easysplit.Servicios.Plan;
 
 import com.example.easysplit.Servicios.Usuario.UsuarioPorPlanRespuesta;
+import com.example.easysplit.Servicios.Usuario.UsuarioRespuestaLista;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

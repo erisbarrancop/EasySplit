@@ -27,6 +27,9 @@ import com.example.easysplit.Servicios.Gasto.GastoService;
 import com.example.easysplit.Servicios.Plan.PlanUsuarioRespuesta;
 import com.example.easysplit.Servicios.Plan.PlanUsuarioService;
 import com.example.easysplit.Servicios.Usuario.UsuarioPorPlanRespuesta;
+import com.example.easysplit.Servicios.Usuario.UsuarioRespuesta;
+import com.example.easysplit.Servicios.Usuario.UsuarioRespuestaLista;
+import com.example.easysplit.Servicios.Usuario.UsuarioService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ public class GastoActivity extends AppCompatActivity {
     private String url;
     private int idPagador;
     private PlanUsuarioService planUsuarioService;
+    private UsuarioService usuarioService;
     private Spinner spinnerUsuarios;
     private UserCheckboxSpinnerAdapter adapter;
 
@@ -58,95 +62,46 @@ public class GastoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gasto);
 
-        // Retrieve the planId and planName from the intent
         planId = getIntent().getIntExtra("selectedPlan", 0);
         planName = getIntent().getStringExtra("planName");
         sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE);
 
-        // Set the plan name in the TextView
         TextView currentPlanName = findViewById(R.id.textViewCurrentPlan);
         currentPlanName.setText(planName);
 
         listViewGastos = findViewById(R.id.listViewCurrentPlan);
         url = getResources().getString(R.string.baseUrl);
 
-        // Initialize Retrofit and GastoService
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         gastoService = retrofit.create(GastoService.class);
         planUsuarioService = retrofit.create(PlanUsuarioService.class);
+        usuarioService = retrofit.create(UsuarioService.class);
 
         idPagador = sharedPreferences.getInt("UserID", 0);
 
         obtenerGastos(planId);
 
         FloatingActionButton fabAddGasto = findViewById(R.id.fab_gasto);
-
         fabAddGasto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarDialogoCrearGasto();
+                obtenerUsuariosDelPlanYMostrarDialogo(planId);
             }
         });
     }
 
-    private void mostrarDialogoCrearGasto() {
-        Dialog dialog = new Dialog(GastoActivity.this);
-        View dialogView = LayoutInflater.from(GastoActivity.this).inflate(R.layout.dialog_create_gasto, null);
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(dialogView);
-
-        EditText editTextConcepto = dialogView.findViewById(R.id.editTextConcepto);
-        EditText editTextImporte = dialogView.findViewById(R.id.editTextImporte);
-        spinnerUsuarios = dialogView.findViewById(R.id.spinnerUsuarios);
-        Button btnCrearGasto = dialogView.findViewById(R.id.btnCrearGasto);
-
-        // Obtener usuarios del plan y configurar el adaptador del Spinner
-        obtenerUsuariosDelPlan(planId);
-
-        // Listener para el botón de crear gasto
-        btnCrearGasto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String concepto = editTextConcepto.getText().toString().trim();
-                float importe = Float.parseFloat(editTextImporte.getText().toString().trim());
-
-                // Obtener los usuarios seleccionados del spinner
-                List<Usuario> selectedUsuarios = adapter.getSelectedUsuarios();
-                List<Integer> selectedUserIds = new ArrayList<>();
-                for (Usuario usuario : selectedUsuarios) {
-                    selectedUserIds.add(usuario.getId());
-                }
-
-                // Crear el objeto Gasto
-                Gasto gasto = new Gasto(concepto, importe, idPagador);
-
-                // Enviar la solicitud para crear el gasto y asociar usuarios
-                crearGasto(planId, gasto, selectedUserIds);
-
-                // Cerrar el diálogo
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void obtenerUsuariosDelPlan(int planId) {
+    private void obtenerUsuariosDelPlanYMostrarDialogo(int planId) {
         Call<UsuarioPorPlanRespuesta> llamada = planUsuarioService.obtenerUsuariosPorPlan(planId);
 
         llamada.enqueue(new Callback<UsuarioPorPlanRespuesta>() {
             @Override
             public void onResponse(Call<UsuarioPorPlanRespuesta> call, Response<UsuarioPorPlanRespuesta> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Usuario> usuarios = response.body().getUsuarios();
-
-                    // Configurar el adaptador del Spinner con los usuarios obtenidos
-                    adapter = new UserCheckboxSpinnerAdapter(GastoActivity.this, usuarios, new ArrayList<>());
-                    spinnerUsuarios.setAdapter(adapter);
+                    List<PlanUsuario> usuariosPlan = response.body().getData();
+                    obtenerDetallesUsuarios(usuariosPlan);
                 } else {
                     Toast.makeText(GastoActivity.this, "No se pudieron obtener los usuarios del plan", Toast.LENGTH_SHORT).show();
                 }
@@ -159,15 +114,80 @@ public class GastoActivity extends AppCompatActivity {
         });
     }
 
-    private void crearGasto(int planId, Gasto gasto, List<Integer> usuarios) {
-        Call<Void> llamada = gastoService.crearGasto(planId, new GastoService.CrearGastoRequest(gasto, usuarios));
+    private void obtenerDetallesUsuarios(List<PlanUsuario> usuariosPlan) {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        for (PlanUsuario usuario : usuariosPlan) {
+            Call<UsuarioRespuesta> llamadaUsuario = usuarioService.obtenerUsuarioPorID(usuario.getId_usuario());
+            llamadaUsuario.enqueue(new Callback<UsuarioRespuesta>() {
+                @Override
+                public void onResponse(Call<UsuarioRespuesta> call, Response<UsuarioRespuesta> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        usuarios.add(response.body().getData());
+
+                        if (usuarios.size() == usuariosPlan.size()) {
+                            adapter = new UserCheckboxSpinnerAdapter(GastoActivity.this, usuarios, new ArrayList<>());
+                            mostrarDialogoCrearGasto();
+                        }
+                    } else {
+                        Toast.makeText(GastoActivity.this, "No se pudieron obtener los detalles del usuario", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UsuarioRespuesta> call, Throwable t) {
+                    Toast.makeText(GastoActivity.this, "Error en la conexión al obtener detalles del usuario", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void mostrarDialogoCrearGasto() {
+        Dialog dialog = new Dialog(GastoActivity.this);
+        View dialogView = LayoutInflater.from(GastoActivity.this).inflate(R.layout.dialog_create_gasto, null);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(dialogView);
+
+        EditText editTextConcepto = dialogView.findViewById(R.id.editTextConcepto);
+        EditText editTextImporte = dialogView.findViewById(R.id.editTextImporte);
+        spinnerUsuarios = dialogView.findViewById(R.id.spinnerUsuarios);
+        spinnerUsuarios.setAdapter(adapter);
+        Button btnCrearGasto = dialogView.findViewById(R.id.btnCrearGasto);
+
+        btnCrearGasto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String concepto = editTextConcepto.getText().toString().trim();
+                float importe = Float.parseFloat(editTextImporte.getText().toString().trim());
+
+                List<Usuario> selectedUsuarios = adapter.getSelectedUsuarios();
+                List<Integer> selectedUserIds = new ArrayList<>();
+                for (Usuario usuario : selectedUsuarios) {
+                    selectedUserIds.add(usuario.getId());
+                }
+
+                Gasto gasto = new Gasto(concepto, importe, idPagador);
+                GastoService.CrearGastoRequest request = new GastoService.CrearGastoRequest(gasto, selectedUserIds);
+
+                crearGasto(planId, request);
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void crearGasto(int planId, GastoService.CrearGastoRequest request) {
+        Call<Void> llamada = gastoService.crearGasto(planId, request);
 
         llamada.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(GastoActivity.this, "Gasto creado exitosamente", Toast.LENGTH_SHORT).show();
-                    obtenerGastos(planId); // Actualizar la lista de gastos después de crear uno nuevo
+                    obtenerGastos(planId);
                 } else {
                     Toast.makeText(GastoActivity.this, "No se pudo crear el gasto", Toast.LENGTH_SHORT).show();
                 }

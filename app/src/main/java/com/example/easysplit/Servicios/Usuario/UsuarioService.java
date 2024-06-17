@@ -17,4 +17,6 @@ public interface UsuarioService {
 
     @GET("/usuarios/{username}")
     Call<UsuarioRespuesta> obtenerUsuarioPorUsername(@Path("username") String username);
+    @GET("/usuarios/{userId}")
+    Call<UsuarioRespuesta> obtenerUsuarioPorID(@Path("userId") int userId);
 }

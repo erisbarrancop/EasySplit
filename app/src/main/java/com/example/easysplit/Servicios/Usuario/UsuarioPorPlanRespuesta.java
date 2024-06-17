@@ -1,5 +1,6 @@
 package com.example.easysplit.Servicios.Usuario;
 
+import com.example.easysplit.Modelos.PlanUsuario;
 import com.example.easysplit.Modelos.Usuario;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,18 +8,18 @@ import java.util.List;
 
 public class UsuarioPorPlanRespuesta {
 
-    @SerializedName("data")
-    private List<Usuario> usuarios;
+    private List<PlanUsuario> data;
 
-    public UsuarioPorPlanRespuesta(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public UsuarioPorPlanRespuesta(List<PlanUsuario> data) {
+        this.data = data;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    public List<PlanUsuario> getData() {
+        return data;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setData(List<PlanUsuario> data) {
+        this.data = data;
     }
 }
+
