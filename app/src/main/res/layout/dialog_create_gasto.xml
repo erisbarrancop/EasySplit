@@ -10,48 +10,54 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:text="Crear Gasto"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#1B6816"
         android:gravity="center"
-        android:layout_marginBottom="20dp"/>
+        />
 
     <EditText
         android:id="@+id/editTextConcepto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="Concepto del gasto"
         android:background="@drawable/easysplit_edittext"
         android:padding="8dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     <EditText
         android:id="@+id/editTextImporte"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="Importe del gasto"
         android:inputType="numberDecimal"
         android:background="@drawable/easysplit_edittext"
         android:padding="8dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     <Spinner
         android:id="@+id/spinnerUsuarios"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/easysplit_edittext"
-        android:padding="8dp"/>
-
-    <Button
-        android:id="@+id/btnCrearGasto"
+        android:background="@drawable/easysplit_spinner"
+        />
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crear Gasto"
-        android:textColor="#FFFFFF"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+    <Button
+        android:id="@+id/btnCrearGasto"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:background="@drawable/send_button_form"
-        android:layout_marginTop="20dp"/>
+        android:textColor="#FFFFFF"
+        />
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,4 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Background shape layer -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="#FFFBEA"/>
@@ -8,9 +7,14 @@
         </shape>
     </item>
 
-    <item android:bottom="2dp">
-        <shape android:shape="rectangle"/>
-
-            <solid android:color="#85BB65"/>
+    <item android:right="10dp" android:top="10dp" android:bottom="10dp">
+        <layer-list>
+            <item>
+                <bitmap
+                    android:src="@drawable/ic_spinner_arrow"
+                    android:gravity="right"
+                    android:tint="#85BB65"/>
+            </item>
+        </layer-list>
     </item>
 </layer-list>

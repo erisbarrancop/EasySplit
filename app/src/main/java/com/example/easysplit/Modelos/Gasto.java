@@ -1,6 +1,6 @@
 package com.example.easysplit.Modelos;
 
-import java.util.Date;
+import java.util.List;
 
 public class Gasto {
 
@@ -10,11 +10,13 @@ public class Gasto {
     private int id_plan;
     private int id_pagador;
     private String fecha;
+    List<Integer> usuarios;
 
-    public Gasto(String concepto, float importe, int id_pagador) {
+    public Gasto(String concepto, float importe, int id_pagador, List<Integer> selectedUserIds) {
         this.concepto = concepto;
         this.importe = importe;
         this.id_pagador = id_pagador;
+        this.usuarios = selectedUserIds;
 
     }
 

@@ -24,11 +24,9 @@ import com.example.easysplit.Modelos.Usuario;
 import com.example.easysplit.R;
 import com.example.easysplit.Servicios.Gasto.GastoRespuesta;
 import com.example.easysplit.Servicios.Gasto.GastoService;
-import com.example.easysplit.Servicios.Plan.PlanUsuarioRespuesta;
 import com.example.easysplit.Servicios.Plan.PlanUsuarioService;
 import com.example.easysplit.Servicios.Usuario.UsuarioPorPlanRespuesta;
 import com.example.easysplit.Servicios.Usuario.UsuarioRespuesta;
-import com.example.easysplit.Servicios.Usuario.UsuarioRespuestaLista;
 import com.example.easysplit.Servicios.Usuario.UsuarioService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -167,10 +165,9 @@ public class GastoActivity extends AppCompatActivity {
                     selectedUserIds.add(usuario.getId());
                 }
 
-                Gasto gasto = new Gasto(concepto, importe, idPagador);
-                GastoService.CrearGastoRequest request = new GastoService.CrearGastoRequest(gasto, selectedUserIds);
+                Gasto gasto = new Gasto(concepto, importe, idPagador, selectedUserIds);
 
-                crearGasto(planId, request);
+                crearGasto(planId, gasto);
 
                 dialog.dismiss();
             }
@@ -179,8 +176,8 @@ public class GastoActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void crearGasto(int planId, GastoService.CrearGastoRequest request) {
-        Call<Void> llamada = gastoService.crearGasto(planId, request);
+    private void crearGasto(int planId, Gasto gasto) {
+        Call<Void> llamada = gastoService.crearGasto(planId, gasto);
 
         llamada.enqueue(new Callback<Void>() {
             @Override

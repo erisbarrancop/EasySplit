@@ -18,32 +18,8 @@ public interface GastoService {
     @POST("gastos/{id_plan}")
     Call<Void> crearGasto(
             @Path("id_plan") int idPlan,
-            @Body CrearGastoRequest request
+            @Body Gasto gasto
     );
 
-    public class CrearGastoRequest {
-        private Gasto gasto;
-        private List<Integer> usuarios;
 
-        public CrearGastoRequest(Gasto gasto, List<Integer> usuarios) {
-            this.gasto = gasto;
-            this.usuarios = usuarios;
-        }
-
-        public Gasto getGasto() {
-            return gasto;
-        }
-
-        public void setGasto(Gasto gasto) {
-            this.gasto = gasto;
-        }
-
-        public List<Integer> getUsuarios() {
-            return usuarios;
-        }
-
-        public void setUsuarios(List<Integer> usuarios) {
-            this.usuarios = usuarios;
-        }
-    }
 }
