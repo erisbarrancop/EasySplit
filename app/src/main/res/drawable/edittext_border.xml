@@ -4,7 +4,7 @@
     <solid android:color="@android:color/transparent" />
     <stroke
         android:width="5dp"
-        android:color="#BCABFA" /> <!-- Color lila (puedes cambiar el valor #BCABFA por el color lila que desees) -->
+        android:color="#4CAF50" /> <!-- Color lila (puedes cambiar el valor #BCABFA por el color lila que desees) -->
     <corners android:radius="5dp" /> <!-- Bordes redondeados de 5dp (puedes ajustar el valor según tus preferencias) -->
     <padding
         android:left="10dp"

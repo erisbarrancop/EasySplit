@@ -3,12 +3,14 @@ package com.example.easysplit.Vistas;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -89,6 +91,22 @@ public class GastoActivity extends AppCompatActivity {
                 obtenerUsuariosDelPlanYMostrarDialogo(planId);
             }
         });
+
+        listViewGastos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Gasto gastoSeleccionado = (Gasto) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(GastoActivity.this, DetalleGastoActivity.class);
+
+                intent.putExtra("concepto", gastoSeleccionado.getConcepto());
+                intent.putExtra("importe", gastoSeleccionado.getImporte());
+                intent.putExtra("idPagador", gastoSeleccionado.getId_pagador());
+
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void obtenerUsuariosDelPlanYMostrarDialogo(int planId) {
